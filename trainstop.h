@@ -4,8 +4,10 @@
 #include "train.h"
 
 _Task TrainStop {
-	class PImpl; // *** Replace these two lines with your own implementation.
-	PImpl *pimpl;
+    Printer & prt;
+    NameServer & nameServer;
+    unsigned int id;
+    unsigned int stopCost;
 
 	void main();
   public:
@@ -21,7 +23,7 @@ _Task TrainStop {
 
 	// Student uses card to buy a ticket for numStops stops.
 	void buy( unsigned int numStops, WATCard & card );
-	
+
 	// Student waits for a train traveling in the specified direction.
 	Train * wait( unsigned int studentId, Train::Direction direction );
 	

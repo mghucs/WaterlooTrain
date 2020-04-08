@@ -1,3 +1,5 @@
+#ifndef GLOBAL_H
+#define GLOBAL_H
 #pragma once
 
 // Forward declarations
@@ -25,3 +27,5 @@ extern MPRNG mprng;					// random-number generator
 // tab-width: 4 //
 // compile-command: "make" //
 // End: //
+
+#endif

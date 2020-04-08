@@ -1,8 +1,12 @@
 #ifndef STUDENT_H
 #define STUDENT_H
 #pragma once
-#include "global.h"
-#include "train.h"
+
+#include "MPRNG.h"
+_Monitor Printer;
+_Task NameServer;
+_Task WATCardOffice;
+_Task Groupoff;
 
 _Task Student {
     Printer &prt;
@@ -14,7 +18,9 @@ _Task Student {
     unsigned int stopCost;
     unsigned int maxStudentDelay;
     unsigned int maxStudentTrips;
+    MPRNG mprng;
 
+    bool checkVisited();
 
     void main();
   public:

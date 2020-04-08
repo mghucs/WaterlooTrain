@@ -1,8 +1,11 @@
+#ifndef BANK_H
+#define BANK_H
 #pragma once
 
 _Monitor Bank {
-	class PImpl; // *** Replace these two lines with your own implementation.
-	PImpl * pimpl;
+    unsigned int numStudents;
+    unsigned int * studentBank;
+
 
   public:
 	Bank( unsigned int numStudents );
@@ -17,3 +20,4 @@ _Monitor Bank {
 // tab-width: 4 //
 // compile-command: "make" //
 // End: //
+#endif

@@ -3,8 +3,8 @@
 #include <uFuture.h>
 
 class WATCard {
-	class PImpl; // *** Replace these two lines with your own implementation.
-	PImpl * pimpl;
+	bool paid = false;
+	unsigned int balance = 0;
 
 	WATCard( const WATCard & ) = delete;				// prevent copying
 	WATCard & operator=( const WATCard & ) = delete;

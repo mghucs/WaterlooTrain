@@ -1,11 +1,19 @@
+#ifndef PARENT_H
+#define PARENT_H
+
 #pragma once
+#include "MPRNG.h"
 
 _Monitor Printer;										// forward declarations
 _Monitor Bank;
 
 _Task Parent {
-	class PImpl;
-	PImpl * pimpl;
+    Printer & prt;
+    Bank & bank;
+    unsigned int numStudents;
+    unsigned int parentalDelay;
+    unsigned int maxTripCost;
+    MPRNG mprng;
 
 	void main();
   public:
@@ -18,3 +26,4 @@ _Task Parent {
 // tab-width: 4 //
 // compile-command: "make" //
 // End: //
+#endif

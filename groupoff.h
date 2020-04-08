@@ -1,3 +1,6 @@
+#ifndef GROUPOFF_H
+#define GROUPOFF_H
+
 #pragma once
 
 #include "watcard.h"
@@ -19,3 +22,4 @@ _Task Groupoff {
 // tab-width: 4 //
 // compile-command: "make" //
 // End: //
+#endif

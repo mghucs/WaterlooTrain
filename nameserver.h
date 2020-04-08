@@ -1,13 +1,17 @@
+#ifndef NAMESERVER_H
+#define NAMESERVER_H
+
 #pragma once
 
-_Monitor Printer;										// forward declarations
-_Task VendingMachine;
+_Monitor Printer;
 _Task TrainStop;
 
 _Task NameServer {
-	class PImpl;
-	PImpl * pimpl;
-	
+    Printer & prt;
+    unsigned int numStops;
+    unsigned int numStudents;
+	TrainStop ** trainStopList;
+
 	void main();
   public:
 	NameServer( Printer & prt, unsigned int numStops, unsigned int numStudents );
@@ -24,3 +28,4 @@ _Task NameServer {
 // tab-width: 4 //
 // compile-command: "make" //
 // End: //
+#endif

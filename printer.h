@@ -1,3 +1,5 @@
+#ifndef PRINTER_H
+#define PRINTER_H
 #pragma once
 
 _Monitor Printer {
@@ -28,3 +30,5 @@ _Monitor Printer {
 // tab-width: 4 //
 // compile-command: "make" //
 // End: //
+
+#endif

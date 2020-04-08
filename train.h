@@ -1,3 +1,6 @@
+#ifndef TRAIN_H
+#define TRAIN_H
+
 #pragma once
 #include "global.h"
 #include "watcard.h"
@@ -8,8 +11,12 @@ _Task Train {
 	_Event Ejected {};						// Exception raised at student without ticket
 
   private:
-  	class PImpl;
-  	PImpl *pimpl;
+    Printer &prt;
+    NameServer & nameServer;
+    unsigned int id;
+    unsigned int maxNumStudents;
+    unsigned int numStops;
+    unsigned int currentlyCarrying = 0;
 
 	void main();
   public:
@@ -25,3 +32,4 @@ _Task Train {
 // tab-width: 4 //
 // compile-command: "make" //
 // End: //
+#endif

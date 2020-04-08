@@ -1,7 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-
 struct ConfigParms {
 	unsigned int stopCost;								// amount to charge per train stop
 	unsigned int numStudents;							// number of students to create
