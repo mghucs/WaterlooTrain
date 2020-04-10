@@ -16,9 +16,18 @@ _Task Train {
     unsigned int id;
     unsigned int maxNumStudents;
     unsigned int numStops;
+
     unsigned int currentlyCarrying = 0;
+    unsigned int currentStop;
+    TrainStop ** trainStopList;
+    uCondition * travellingStudents;
+    uCondition boardingCond;
+
+    Direction direction;
 
 	void main();
+
+	void wakeUpStudents();
   public:
 	Train( Printer & prt, NameServer & nameServer, unsigned int id, unsigned int maxNumStudents, unsigned int numStops );
 	~Train();

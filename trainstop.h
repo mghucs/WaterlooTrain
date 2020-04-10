@@ -9,6 +9,13 @@ _Task TrainStop {
     unsigned int id;
     unsigned int stopCost;
 
+    bool trainArrived = false;
+    Train * arrivedTrain;
+
+    uCondition clockwiseCond, counterClockwiseCond;
+    unsigned int clockwiseWaitingStudents;
+    unsigned int counterClockwiseWaitingStudents;
+
 	void main();
   public:
 	_Event Funds {										// Thrown when there are insufficient funds on the card to buy a ticket.

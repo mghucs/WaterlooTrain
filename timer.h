@@ -3,9 +3,12 @@
 #include "global.h"
 
 _Task Timer {
-	class PImpl;
-	PImpl * pimpl;
+    Printer & prt;
+    NameServer & nameServer;
+    unsigned int timerDelay;
 
+    TrainStop ** trainStopList;
+    unsigned int numStops;
     void main();
   public:
     Timer( Printer & prt, NameServer & nameServer, unsigned int timerDelay );
