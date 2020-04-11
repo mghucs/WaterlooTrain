@@ -72,4 +72,17 @@ int main(int argc, char * argv[]) {
 //        students[id] = new Student(prt, nameServer, cardOffice, groupoff, id, configParms.numStops,
 //                configParms.stopCost, configParms.maxStudentDelay, configParms.maxStudentTrips);
 //    }
+
+    for (int id = 0; id < configParms.numStops; ++id) {
+        delete trainStops[id];
+    }
+
+    for (int id = 0; id < 2; ++id) {
+        delete trains[id];
+        delete conductors[id];
+    }
+
+//    for (int id = 0; id < configParms.numStudents; ++id) {
+//        delete students[id];
+//    }
 }

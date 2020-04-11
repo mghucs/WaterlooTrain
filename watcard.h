@@ -4,7 +4,7 @@
 
 class WATCard {
 	bool paid = false;
-	unsigned int balance = 0;
+	unsigned int balance;
 
 	WATCard( const WATCard & ) = delete;				// prevent copying
 	WATCard & operator=( const WATCard & ) = delete;
