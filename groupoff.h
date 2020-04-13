@@ -5,11 +5,18 @@
 
 #include "watcard.h"
 #include "printer.h"
-
+#include "MPRNG.h"
 _Task Groupoff {
-	class PImpl;
-	PImpl * pimpl;
+    Printer & prt;
+    unsigned int numStudents;
+    unsigned int maxTripCost;
+    unsigned int groupoffDelay;
+    unsigned int nextDelivery;
 
+    MPRNG mprng;
+
+    WATCard::FWATCard *giftcards; // Giftcards to give to students
+    WATCard **watcards;
 	void main();
   public:
 	Groupoff( Printer & prt, unsigned int numStudents, unsigned int maxTripCost, unsigned int groupoffDelay );

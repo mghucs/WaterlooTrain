@@ -21,6 +21,7 @@ void processConfigFile( const char * configFile, ConfigParms & cparms ) {
         iss >> num;
 
         if (name.compare("StopCost") == 0) cparms.stopCost = num;
+        else if (name.compare("NumStudents") == 0) cparms.numStudents = num;
         else if (name.compare("NumStops") == 0) cparms.numStops = num;
         else if (name.compare("MaxNumStudents") == 0) cparms.maxNumStudents = num;
         else if (name.compare("TimerDelay") == 0) cparms.timerDelay = num;

@@ -3,10 +3,14 @@
 #include "printer.h"
 
 Parent::Parent(Printer & prt, Bank & bank, unsigned int numStudents, unsigned int parentalDelay, unsigned int maxTripCost):
-        prt{prt}, bank{bank}, numStudents{numStudents}, parentalDelay{parentalDelay}, maxTripCost{maxTripCost} {}
-
-void Parent::main() {
+        prt{prt}, bank{bank}, numStudents{numStudents}, parentalDelay{parentalDelay}, maxTripCost{maxTripCost} {
     prt.print(Printer::Parent, 'S');
+}
+
+Parent::~Parent() {
+    prt.print(Printer::Parent, 'F');
+}
+void Parent::main() {
     for (;;) {
         _Accept(~Parent) {
             break;
@@ -20,5 +24,4 @@ void Parent::main() {
                 prt.print(Printer::Parent, 'D', randomStudent, amountToGive);
         }
     }
-    prt.print(Printer::Parent, 'F');
 }

@@ -4,11 +4,13 @@
 #pragma once
 #include "global.h"
 #include "watcard.h"
+#include <vector>
+#include <tuple>
 
 _Task Train {
   public:
 	enum Direction { Clockwise, CounterClockwise };
-	_Event Ejected {};						// Exception raised at student without ticket
+	_Event Ejected {};					// Exception raised at student without ticket
 
   private:
     Printer &prt;
@@ -19,9 +21,14 @@ _Task Train {
 
     unsigned int currentlyCarrying = 0;
     unsigned int currentStop;
+    unsigned int numberWaiting;
     TrainStop ** trainStopList;
-    uCondition * travellingStudents;
+    bool ejected = false;
+
+    std::vector<std::tuple<unsigned int, bool>> travellingStudentPaid;
+    uCondition * travellingStudentsCond;
     uCondition boardingCond;
+    uCondition capacityCond;
 
     Direction direction;
 

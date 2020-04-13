@@ -5,7 +5,7 @@
 _Monitor Bank {
     unsigned int numStudents;
     unsigned int * studentBank;
-    uCondition studentCond[numStudents];
+    uCondition * studentCond;
 
   public:
 	Bank( unsigned int numStudents );

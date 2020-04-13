@@ -45,19 +45,19 @@ int main(int argc, char * argv[]) {
     ConfigParms configParms;
     processConfigFile(const_cast<char*>(configFile.c_str()), configParms);
 
-//    unsigned int maxTripCost = configParms.stopCost * (configParms.numStops / 2);
+    unsigned int maxTripCost = configParms.stopCost * (configParms.numStops / 2);
     Printer prt(configParms.numStudents, 2, configParms.numStops, configParms.numCouriers);
-//    Bank bank(configParms.numStudents);
-//    WATCardOffice cardOffice(prt, bank, configParms.numCouriers);
-//    Groupoff groupoff(prt, configParms.numStudents, configParms.stopCost, configParms.groupoffDelay);
-//    Parent parent(prt, bank, configParms.numStudents, configParms.parentalDelay, maxTripCost);
+    Bank bank(configParms.numStudents);
+    WATCardOffice cardOffice(prt, bank, configParms.numCouriers);
+    Groupoff groupoff(prt, configParms.numStudents, configParms.stopCost, configParms.groupoffDelay);
+    Parent parent(prt, bank, configParms.numStudents, configParms.parentalDelay, maxTripCost);
     NameServer nameServer(prt, configParms.numStops, configParms.numStudents);
-//    Timer timer(prt, nameServer, configParms.timerDelay);
+    Timer * timer = new Timer(prt, nameServer, configParms.timerDelay);
 
     TrainStop * trainStops[configParms.numStops];
     Train * trains[2];
     Conductor * conductors[2];
-    Student * students[configParms.numStudents];
+    Student * students[configParms.maxNumStudents];
 
     for (int id = 0; id < configParms.numStops; ++id) {
         trainStops[id] = new TrainStop(prt, nameServer, id, configParms.stopCost);
@@ -68,10 +68,13 @@ int main(int argc, char * argv[]) {
         conductors[id] = new Conductor(prt, id, trains[id], configParms.conductorDelay);
     }
 
-//    for (int id = 0; id < configParms.numStudents; ++id) {
-//        students[id] = new Student(prt, nameServer, cardOffice, groupoff, id, configParms.numStops,
-//                configParms.stopCost, configParms.maxStudentDelay, configParms.maxStudentTrips);
-//    }
+    for (int id = 0; id < configParms.numStudents; ++id) {
+        students[id] = new Student(prt, nameServer, cardOffice, groupoff, id, configParms.numStops,
+                configParms.stopCost, configParms.maxStudentDelay, configParms.maxStudentTrips);
+    }
+    for (int id = 0; id < configParms.numStudents; ++id) {
+        delete students[id];
+    }
 
     for (int id = 0; id < configParms.numStops; ++id) {
         delete trainStops[id];
@@ -81,8 +84,6 @@ int main(int argc, char * argv[]) {
         delete trains[id];
         delete conductors[id];
     }
+    delete timer;
 
-//    for (int id = 0; id < configParms.numStudents; ++id) {
-//        delete students[id];
-//    }
 }

@@ -19,8 +19,7 @@ _Task Student {
     unsigned int maxStudentDelay;
     unsigned int maxStudentTrips;
     MPRNG mprng;
-
-    bool checkVisited();
+    bool paid = false;
 
     void main();
   public:

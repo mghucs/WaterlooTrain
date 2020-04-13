@@ -9,6 +9,7 @@ _Task Timer {
 
     TrainStop ** trainStopList;
     unsigned int numStops;
+    unsigned int tickNum;
     void main();
   public:
     Timer( Printer & prt, NameServer & nameServer, unsigned int timerDelay );
