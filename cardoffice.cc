@@ -5,7 +5,6 @@ using namespace std;
 
 WATCardOffice::WATCardOffice(Printer & prt, Bank & bank, unsigned int numCouriers):
     prt{prt}, bank{bank}, numCouriers{numCouriers} {
-    prt.print(Printer::Kind::WATCardOffice, 'S');
 
     couriers = new Courier *[numCouriers];
     for (int id = 0; id < numCouriers; id++) {
@@ -14,7 +13,6 @@ WATCardOffice::WATCardOffice(Printer & prt, Bank & bank, unsigned int numCourier
 }
 
 WATCardOffice::~WATCardOffice() {
-    prt.print(Printer::Kind::WATCardOffice, 'F');
 
     for (int id = 0; id < numCouriers; id++) {
         delete couriers[id];
@@ -68,17 +66,18 @@ void WATCardOffice::main() {
 }
 
 void WATCardOffice::Courier::main() {
+    prt.print(Printer::Kind::WATCardOffice, 'S');
     for (;;) {
         _Accept(~Courier) {
             break;
         }
         _Else {
             WATCardOffice::Job * jobToDo = cardOffice.requestWork();
+            if (jobToDo == nullptr) break;
 
             prt.print(Printer::Kind::WATCardOfficeCourier, 't', jobToDo->id, jobToDo->amount);
             bank.withdraw(jobToDo->id, jobToDo->amount);
             jobToDo->watcard->deposit(jobToDo->amount);
-            prt.print(Printer::Kind::WATCardOfficeCourier, 'T', jobToDo->id, jobToDo->amount);
 
             unsigned int randomLost = mprng(5);
             if (randomLost == 3) {
@@ -89,8 +88,10 @@ void WATCardOffice::Courier::main() {
             else {
                 jobToDo->result.delivery(jobToDo->watcard);
             }
+            prt.print(Printer::Kind::WATCardOfficeCourier, 'T', jobToDo->id, jobToDo->amount);
             delete jobToDo;
 
         }
     }
+    prt.print(Printer::Kind::WATCardOffice, 'F');
 }

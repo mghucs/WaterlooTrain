@@ -52,17 +52,18 @@ int main(int argc, char * argv[]) {
     Groupoff groupoff(prt, configParms.numStudents, configParms.stopCost, configParms.groupoffDelay);
     Parent parent(prt, bank, configParms.numStudents, configParms.parentalDelay, maxTripCost);
     NameServer nameServer(prt, configParms.numStops, configParms.numStudents);
-    Timer * timer = new Timer(prt, nameServer, configParms.timerDelay);
 
     TrainStop * trainStops[configParms.numStops];
+
     Train * trains[2];
     Conductor * conductors[2];
-    Student * students[configParms.maxNumStudents];
+    Student * students[configParms.numStudents];
 
     for (int id = 0; id < configParms.numStops; ++id) {
         trainStops[id] = new TrainStop(prt, nameServer, id, configParms.stopCost);
     }
 
+    Timer * timer = new Timer(prt, nameServer, configParms.timerDelay);
     for (int id = 0; id < 2; ++id) {
         trains[id] = new Train(prt, nameServer, id, configParms.maxNumStudents, configParms.numStops);
         conductors[id] = new Conductor(prt, id, trains[id], configParms.conductorDelay);
@@ -72,18 +73,22 @@ int main(int argc, char * argv[]) {
         students[id] = new Student(prt, nameServer, cardOffice, groupoff, id, configParms.numStops,
                 configParms.stopCost, configParms.maxStudentDelay, configParms.maxStudentTrips);
     }
+
+    // Delete all of the students first to show that no more people are waiting for the trains
     for (int id = 0; id < configParms.numStudents; ++id) {
         delete students[id];
     }
+
+    // Delete the timer first so the trainstops nor train will be ticked
+    delete timer;
 
     for (int id = 0; id < configParms.numStops; ++id) {
         delete trainStops[id];
     }
 
     for (int id = 0; id < 2; ++id) {
-        delete trains[id];
         delete conductors[id];
+        delete trains[id];
     }
-    delete timer;
 
 }

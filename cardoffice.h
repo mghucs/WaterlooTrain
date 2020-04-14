@@ -8,6 +8,7 @@
 
 _Monitor Printer;										// forward declarations
 _Monitor Bank;
+extern MPRNG mprng;
 
 _Task WATCardOffice {
         struct Job { // marshalled arguments and return future
@@ -25,7 +26,6 @@ _Task WATCardOffice {
             Bank & bank;
             WATCardOffice & cardOffice;
             unsigned int id;
-            MPRNG mprng;
 
             void main();
 
@@ -44,7 +44,6 @@ _Task WATCardOffice {
         Courier ** couriers;
         std::queue <Job *> jobQueue;
         uCondition jobCond;
-        MPRNG mprng;
 
         void main();
         public:

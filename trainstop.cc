@@ -1,13 +1,14 @@
 #include "trainstop.h"
 #include "nameserver.h"
 #include "printer.h"
+#include <iostream>
 TrainStop::TrainStop(Printer & prt, NameServer & nameServer, unsigned int id, unsigned int stopCost):
     prt{prt}, nameServer{nameServer}, id{id}, stopCost{stopCost}, clockwiseWaitingStudents{0}, counterClockwiseWaitingStudents{0} {
-    prt.print(Printer::Kind::TrainStop, 'S');
+    prt.print(Printer::Kind::TrainStop, id, 'S');
 }
 
 TrainStop::~TrainStop() {
-    prt.print(Printer::Kind::TrainStop, 'F');
+    prt.print(Printer::Kind::TrainStop, id, 'F');
     while (!clockwiseCond.empty()) clockwiseCond.signal();
     while (!counterClockwiseCond.empty()) counterClockwiseCond.signal();
 }
@@ -22,11 +23,11 @@ void TrainStop::buy(unsigned int numStops, WATCard & card) {
         card.withdraw(stopCost * numStops);
     }
     card.resetPOP();
-    prt.print(Printer::Kind::TrainStop, 'B', tripCost);
+    prt.print(Printer::Kind::TrainStop, id, 'B', tripCost);
 }
 
 Train * TrainStop::wait(unsigned int studentId, Train::Direction direction) {
-    prt.print(Printer::Kind::Student, 'W', studentId, direction);
+    prt.print(Printer::Kind::Student, studentId, 'W', (char) direction);
 
     if (direction == Train::Direction::Clockwise) {
         clockwiseWaitingStudents++;
@@ -44,12 +45,12 @@ Train * TrainStop::wait(unsigned int studentId, Train::Direction direction) {
 }
 
 void TrainStop::tick(){
-    prt.print(Printer::Kind::TrainStop, 't');
+    prt.print(Printer::Kind::TrainStop, id, 't');
     boardingCond.signal();
 }
 
 void TrainStop::disembark(unsigned int studentId) {
-    prt.print(Printer::Kind::Student, 'D', studentId);
+    prt.print(Printer::Kind::Student, studentId, 'D');
 
 }
 
@@ -57,8 +58,8 @@ void TrainStop::disembark(unsigned int studentId) {
 //this stop after taking into account the number it is currently transporting. Within arrive, the TrainStop unblocks
 //the appropriate number of waiting students and these students call Train::embark (see point 5) to get on the train.
 unsigned int TrainStop::arrive(unsigned int trainId, Train::Direction direction, unsigned int maxNumStudents) {
-    if (trainId == Train::Direction::Clockwise) prt.print(Printer::Kind::TrainStop, 'A',  maxNumStudents, clockwiseWaitingStudents);
-    else if (trainId == Train::Direction::CounterClockwise) prt.print(Printer::Kind::TrainStop, 'A',  maxNumStudents, counterClockwiseWaitingStudents);
+    if (trainId == Train::Direction::Clockwise) prt.print(Printer::Kind::TrainStop, id, 'A', trainId, maxNumStudents, clockwiseWaitingStudents);
+    else if (trainId == Train::Direction::CounterClockwise) prt.print(Printer::Kind::TrainStop, id, 'A', trainId, maxNumStudents, counterClockwiseWaitingStudents);
 
     trainArrived = true;
     arrivedTrain = static_cast<Train *>(&uThisTask());
@@ -73,8 +74,6 @@ unsigned int TrainStop::arrive(unsigned int trainId, Train::Direction direction,
         while (!counterClockwiseCond.empty()) counterClockwiseCond.signal(); // Only unblocks the students waiting for counter clockwise train
         return counterClockwiseWaitingStudents;
     }
-
-
 }
 
 void TrainStop::main() {

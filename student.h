@@ -8,6 +8,7 @@ _Task NameServer;
 _Task WATCardOffice;
 _Task Groupoff;
 
+extern MPRNG mprng;
 _Task Student {
     Printer &prt;
     NameServer &nameServer;
@@ -18,7 +19,6 @@ _Task Student {
     unsigned int stopCost;
     unsigned int maxStudentDelay;
     unsigned int maxStudentTrips;
-    MPRNG mprng;
     bool paid = false;
 
     void main();

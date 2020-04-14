@@ -5,26 +5,28 @@
 
 Timer::Timer(Printer & prt, NameServer & nameServer, unsigned int timerDelay):
     prt{prt}, nameServer{nameServer}, timerDelay{timerDelay}, tickNum{0} {
-    prt.print(Printer::Kind::Timer, 'S');
-    trainStopList = nameServer.getStopList();
-    numStops = nameServer.getNumStops();
 }
 
 Timer::~Timer() {
-    prt.print(Printer::Kind::Timer, 'F');
 }
 
 void Timer::main() {
+    prt.print(Printer::Kind::Timer, 'S');
+    trainStopList = nameServer.getStopList();
+    numStops = nameServer.getNumStops();
+    unsigned int id = 0;
     for (;;) {
-        _Accept(~Timer) {
+        id = (id + 1) % numStops;
+        _Accept(~Timer)
+        {
             break;
         }
-        _Else {
-            for (int id = 0; id < nameServer.getNumStops(); id++) {
+        _Else{
                 yield(timerDelay);
                 trainStopList[id]->tick();
-                prt.print(Printer::Kind::Timer, 'T', tickNum++);
-            }
+                prt.print(Printer::Kind::Timer, 't', tickNum++);
+                break;
         }
     }
+    prt.print(Printer::Kind::Timer, 'F');
 }

@@ -2,13 +2,11 @@
 
 Groupoff::Groupoff(Printer & prt, unsigned int numStudents, unsigned int maxTripCost, unsigned int groupoffDelay):
     prt{prt}, numStudents{numStudents}, maxTripCost{maxTripCost}, groupoffDelay{groupoffDelay}, nextDelivery{0} {
-    prt.print(Printer::Kind::Groupoff, 'S');
     giftcards = new WATCard::FWATCard[numStudents];
     watcards = new WATCard*[numStudents];
 }
 
 Groupoff::~Groupoff() {
-    prt.print(Printer::Kind::Groupoff, 'F');
     delete [] giftcards;
     delete [] watcards;
 }
@@ -18,10 +16,11 @@ WATCard::FWATCard Groupoff::giftCard() {
 }
 
 void Groupoff::main() {
+    prt.print(Printer::Kind::Groupoff, 'S');
     // Each student wants to receive a giftcard
     for (unsigned int id = 0; id < numStudents; id++) {
         try {
-            _Accept(giftcard) {}
+            _Accept(giftCard) {}
         }
         catch (uMutexFailure::RendezvousFailure &) {}
     }
@@ -42,4 +41,5 @@ void Groupoff::main() {
         }
         catch(uMutexFailure::RendezvousFailure &){}
     }
+    prt.print(Printer::Kind::Groupoff, 'F');
 }

@@ -13,11 +13,9 @@ Train::Train(Printer & prt, NameServer & nameServer, unsigned int id, unsigned i
             direction = CounterClockwise;
             currentStop = ceil(numStops / 2);
         }
-        trainStopList = nameServer.getStopList(id);
     travellingStudentsCond = new uCondition[maxNumStudents];
 }
 Train::~Train() {
-    prt.print(Printer::Kind::Train, 'F');
     for (unsigned int id = 0; id < maxNumStudents; id++) travellingStudentsCond[id].signalBlock();
     boardingCond.signalBlock();
     capacityCond.signalBlock();
@@ -30,12 +28,12 @@ _Nomutex unsigned int Train::getId() const{
 }
 
 TrainStop * Train::embark(unsigned int studentId, unsigned int destStop, WATCard& card) {
-    prt.print(Printer::Kind::Train, 'E', studentId, destStop);
-    prt.print(Printer::Kind::Student, 'E', id);
+    prt.print(Printer::Kind::Train, id, 'E', studentId, destStop);
+    prt.print(Printer::Kind::Student, studentId, 'E', id);
 
     travellingStudentPaid.push_back(std::make_tuple(studentId, card.paidForTicket())); // Push the pop status and student id as a tuple
 
-    currentlyCarrying++;
+    currentlyCarrying++; // if not enough space on train,make students wait for next one
     while (currentlyCarrying > maxNumStudents) capacityCond.wait();
 
     while (currentStop != destStop) {
@@ -56,7 +54,7 @@ void Train::scanPassengers() {
         if (!std::get<1>(studentPayment)) {
             currentlyCarrying--; // wake up students, set a boolean and check boolewan in embark and throw
             ejected = true;
-            prt.print(Printer::Kind::Conductor, 'e', std::get<0>(studentPayment));
+            prt.print(Printer::Kind::Conductor, id, 'e', std::get<0>(studentPayment));
             travellingStudentsCond[std::get<0>(studentPayment)].signalBlock();
         }
     }
@@ -70,12 +68,13 @@ void Train::wakeUpStudents() {
 }
 
 void Train::main() {
-    prt.print(Printer::Kind::Train, 'S', currentStop, direction);
+    prt.print(Printer::Kind::Train, id, 'S', currentStop, (char) direction);
+    trainStopList = nameServer.getStopList(id);
     if (direction == Clockwise) {
         currentStop = (currentStop + 1) % numStops;
         while (currentStop != 0) { // Go to each stop
             numberWaiting = trainStopList[currentStop]->arrive(id, Clockwise, maxNumStudents - currentlyCarrying);
-            prt.print(Printer::Kind::Train, 'A', currentStop, maxNumStudents - currentlyCarrying, currentlyCarrying);
+            prt.print(Printer::Kind::Train, id, 'A', currentStop, maxNumStudents - currentlyCarrying, currentlyCarrying);
             wakeUpStudents();
             currentStop = (currentStop + 1) % numStops;
         }
@@ -84,10 +83,11 @@ void Train::main() {
     else if (direction == CounterClockwise) {
         currentStop = (currentStop - 1) % numStops;
         while (currentStop != ceil(numStops / 2)) { // Go to each stop
-            trainStopList[currentStop]->arrive(id, CounterClockwise, maxNumStudents - currentlyCarrying);
-            prt.print(Printer::Kind::Train, 'A', currentStop, maxNumStudents - currentlyCarrying, currentlyCarrying);
+            numberWaiting = trainStopList[currentStop]->arrive(id, CounterClockwise, maxNumStudents - currentlyCarrying);
+            prt.print(Printer::Kind::Train, id, 'A', currentStop, maxNumStudents - currentlyCarrying, currentlyCarrying);
             wakeUpStudents();
             currentStop = (currentStop - 1) % numStops;
         }
     }
+    prt.print(Printer::Kind::Train, id, 'F');
 }

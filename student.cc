@@ -14,15 +14,18 @@ Student::Student(Printer & prt, NameServer & nameServer, WATCardOffice & cardOff
                 groupoff{groupoff}, id{id}, numStops{numStops}, stopCost{stopCost},
                 maxStudentDelay{maxStudentDelay}, maxStudentTrips{maxStudentTrips} {
 }
-Student::~Student(){}
+Student::~Student(){
+}
 
 
 void Student::main() {
     unsigned int numTrips = mprng(maxStudentTrips);
-    prt.print(Printer::Kind::Student, 'S', numTrips);
+    prt.print(Printer::Kind::Student, id, 'S', numTrips);
     int start = mprng(numStops - 1);
     int end;
-    while (start == end) end = mprng(numStops - 1);
+    do {
+        end = mprng(numStops - 1);
+    }while (start == end);
 
     TrainStop * nextTrain;
 
@@ -47,21 +50,21 @@ void Student::main() {
         }
         // Pay for the train
         unsigned int randomPay = mprng(9); // 50% chance of not paying for 1 stop and 30% chance of paying for other
-        prt.print(Printer::Kind::Student, 'T', start, end, (unsigned int) direction);
+        prt.print(Printer::Kind::Student, id, 'T', start, end, (char) direction);
         try {
             _Select( giftCard )
             {
                 if (numStops == 1) {
                     if (randomPay >= 5) { // Do pay
                         nextTrain->buy(maxStops, *giftCard());
-                        prt.print(Printer::Kind::Student, 'G', maxStops * stopCost, giftCard() -> getBalance());
+                        prt.print(Printer::Kind::Student, id, 'G', maxStops * stopCost, giftCard() -> getBalance());
                         paid = true;
                     }
                     // Else we don't pay
                 } else {
                     if (randomPay > 2) { // Do pay
                         nextTrain->buy(maxStops, *giftCard());
-                        prt.print(Printer::Kind::Student, 'G', maxStops * stopCost, giftCard() -> getBalance());
+                        prt.print(Printer::Kind::Student, id, 'G', maxStops * stopCost, giftCard() -> getBalance());
                         paid = true;
                     }
                     // Else we don't pay
@@ -71,23 +74,23 @@ void Student::main() {
                 if (numStops == 1) {
                     if (randomPay >= 5) { // Do pay
                         nextTrain->buy(maxStops, *watCard());
-                        prt.print(Printer::Kind::Student, 'B', maxStops * stopCost, giftCard() -> getBalance());
+                        prt.print(Printer::Kind::Student, id, 'B', maxStops * stopCost, giftCard() -> getBalance());
                         paid = true;
                     }
                     else {
-                        prt.print(Printer::Kind::Student, 'f');
+                        prt.print(Printer::Kind::Student, id, 'f');
                     }
                     // Else we don't pay
                 }
                 else {
                     if (randomPay > 2) { // Do pay
                         nextTrain->buy(maxStops, *watCard());
-                        prt.print(Printer::Kind::Student, 'B', maxStops * stopCost, giftCard()->getBalance());
+                        prt.print(Printer::Kind::Student, id, 'B', maxStops * stopCost, giftCard()->getBalance());
                         paid = true;
                     }
                     // Else we don't pay
                     else {
-                        prt.print(Printer::Kind::Student, 'f');
+                        prt.print(Printer::Kind::Student, id, 'f');
                     }
                 }
             }
@@ -96,18 +99,18 @@ void Student::main() {
             cardOffice.transfer(id, funds.amount, watCard);
         }
         catch (WATCardOffice::Lost &) {
-            prt.print(Printer::Kind::Student, 'L');
+            prt.print(Printer::Kind::Student, id, 'L');
         }
         Train * arrivedTrain = nextTrain->wait(id, direction);
 
         try {
             TrainStop * destinationStop = arrivedTrain->embark(id, end, *watCard());
-            prt.print(Printer::Kind::Student, 'E', maxStops * stopCost, giftCard()->getBalance());
+            prt.print(Printer::Kind::Student, id, 'E', maxStops * stopCost, giftCard()->getBalance());
 
             destinationStop->disembark(id);
         }
         catch (Train::Ejected &) {
-            prt.print(Printer::Kind::Student, 'e');
+            prt.print(Printer::Kind::Student, id, 'e');
             return;
         }
         start = end;
@@ -115,6 +118,7 @@ void Student::main() {
 
         paid = false;
     }
+    prt.print(Printer::Kind::Student, id, 'F');
 }
 
 

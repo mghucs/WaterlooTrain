@@ -4,7 +4,6 @@
 
 NameServer::NameServer(Printer & prt, unsigned int numStops, unsigned int numStudents):
     prt{prt}, numStops{numStops}, numStudents{numStudents} {
-    prt.print(Printer::Kind::NameServer, 'S');
     trainStopList = new TrainStop *[numStops];
 }
 
@@ -36,5 +35,6 @@ unsigned int NameServer::getNumStops() {
     return numStops;
 }
 
-void NameServer::main() {}
+void NameServer::main() {
+    prt.print(Printer::Kind::NameServer, 'S');}
 

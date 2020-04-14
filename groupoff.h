@@ -6,6 +6,7 @@
 #include "watcard.h"
 #include "printer.h"
 #include "MPRNG.h"
+extern MPRNG mprng;
 _Task Groupoff {
     Printer & prt;
     unsigned int numStudents;
@@ -13,7 +14,6 @@ _Task Groupoff {
     unsigned int groupoffDelay;
     unsigned int nextDelivery;
 
-    MPRNG mprng;
 
     WATCard::FWATCard *giftcards; // Giftcards to give to students
     WATCard **watcards;

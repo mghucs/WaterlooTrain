@@ -7,13 +7,14 @@
 _Monitor Printer;										// forward declarations
 _Monitor Bank;
 
+extern MPRNG mprng;
+
 _Task Parent {
     Printer & prt;
     Bank & bank;
     unsigned int numStudents;
     unsigned int parentalDelay;
     unsigned int maxTripCost;
-    MPRNG mprng;
 
 	void main();
   public:

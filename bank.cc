@@ -1,4 +1,6 @@
 #include "bank.h"
+#include <iostream>
+
 Bank::Bank(unsigned int numStudents): numStudents{numStudents} {
     studentBank = new unsigned int[numStudents];
     studentCond = new uCondition[numStudents];
@@ -9,6 +11,7 @@ Bank::Bank(unsigned int numStudents): numStudents{numStudents} {
 
 void Bank::deposit(unsigned int id, unsigned int amount) {
     studentBank[id] += amount;
+    studentCond[id].signal();
 }
 
 void Bank::withdraw(unsigned int id, unsigned int amount) {
@@ -19,6 +22,7 @@ void Bank::withdraw(unsigned int id, unsigned int amount) {
 }
 
 Bank::~Bank() {
+    for (int id = 0; id < numStudents; id++) studentCond[id].signalBlock();
     delete [] studentBank;
     delete [] studentCond;
 }
